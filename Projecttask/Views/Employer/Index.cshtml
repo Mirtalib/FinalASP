@@ -1,0 +1,142 @@
+﻿@model List<Projecttask.Models.ViewModels.UserWithTagViewModel>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <input type="hidden" id="userId" />
+            <div class="modal-header" style="background-color: #ff0000; color: #000;">
+                <h5 class="modal-title" id="exampleModalLabel">Enter Price and Message</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="price" style="color: #ff0000;">Price:</label>
+                        <input type="number" class="form-control" id="price">
+                    </div>
+                    <div class="form-group">
+                        <label for="message" style="color: #ff0000;">Message:</label>
+                        <textarea class="form-control" id="message" rows="4"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="background-color: #ff0000;">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveData()">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User Cards -->
+<div class="container-fluid">
+    <div class="row">
+        @if (Model.Count > 0)
+        {
+            @foreach (var user in Model)
+            {
+                <div class="col-12 col-sm-6 col-lg-4 mb-4">
+                    <div class="card p-3 py-4 rounded" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);">
+                        <div class="text-center">
+                            <img src="@user.User.ProfilePhoto" width="100" class="rounded-circle" alt="Profile Photo" style="border: 2px solid #ff0000;">
+                            <h3 class="mt-2" style="color: #ff0000;">@user.User.UserName</h3>
+                            <span class="mt-1 d-block">@user.User.City</span>
+
+                            <div class="row mt-3">
+                                <div class="col-4">
+                                    <h5 style="color: #ff0000;">Projects</h5>
+                                    <span class="num" style="color: #ff0000;">10</span>
+                                </div>
+                                <div class="col-4">
+                                    <h5 style="color: #ff0000;">Projects</h5>
+                                    <span class="num" style="color: #ff0000;">10</span>
+                                </div>
+                                <div class="col-4">
+                                    <h5 style="color: #ff0000;">Projects</h5>
+                                    <span class="num" style="color: #ff0000;">10</span>
+                                </div>
+                            </div>
+
+                            <hr class="line" style="background-color: #ff0000; height: 2px; margin: 20px 0; border: none;">
+
+                            <p class="mt-4" style="max-height: 150px!important; text-overflow: ellipsis; overflow: hidden; color: #ff0000;">@user.User.About</p>
+
+                            @foreach (var tag in user.Tags)
+                            {
+                                <span class="badge badge-primary bg-danger">@tag.Name</span>
+                            }
+
+                            <div class="profile mt-4">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="openModal('@user.User.Id')">
+                                    Make an offer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <h1 class="text-center" style="color: #ff0000;">There is no employer.</h1>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    body {
+        background-color: darkcyan;
+        color: #333;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+</style>
+</html>
+
+<script>
+    function openModal(userId) {
+        document.getElementById("userId").value = userId;
+    }
+
+    function saveData() {
+
+        var price = document.getElementById("price").value;
+        var message = document.getElementById("message").value;
+        var userId = document.getElementById("userId").value;
+        $('.close').click();
+
+        makeOffer(price, message, userId);
+
+        async function makeOffer(_price, _message, _userId) {
+            const response = await fetch("/Employer/MakeOffer", {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ OfferPrice: _price, Message: _message, WorkerId: _userId })
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                Swal.fire(
+                    'Offer Created!',
+                    'Your offer succesfully sent to worker.',
+                    'success'
+                )
+            }).catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!'
+                })
+                console.error("Error:", error);
+            })
+        }
+    }
+</script>

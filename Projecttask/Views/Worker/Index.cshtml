@@ -1,0 +1,78 @@
+﻿@model List<Projecttask.Models.Orders>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Contact Informations</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p><strong>User Email:</strong> <span id="userEmail"></span></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid">
+	<div class="row">
+		@{
+			if (Model.Count > 0)
+			{
+				foreach (var offers in Model)
+				{
+					<div class="col-12 col-sm-6 col-lg-4 mb-4">
+						<div class="card p-3 py-4 rounded">
+							<div class="text-center">
+								<img src="@offers.Employer.ProfilePhoto" width="100" class="rounded-circle">
+								<h3 class="mt-2">@offers.Employer.UserName</h3>
+								<span class="mt-1 d-block">@offers.Employer.City</span>
+
+								<div class="row mt-3">
+									<div class="col-3">
+								
+									</div>
+									<div class="col-6">
+										<h5>Offer Price</h5>
+										<span class="num">@offers.OfferPrice$</span>
+									</div>
+									<div class="col-2">
+								
+									</div>
+								</div>
+
+								<hr class="line">
+
+								<p class="mt-4" style="max-height: 150px!important; text-overflow: ellipsis; overflow: hidden;">@offers.Message</p>
+
+								<button type="button" class="btn btn-success contact-button" data-toggle="modal" data-target="#exampleModal" data-email="@offers.Employer.Email">
+									Contact
+								</button>
+								<a class="btn btn-danger" href="@Url.Action("DeleteOffer", "Worker", new { offerId = offers.Id })">Delete</a>
+							</div>
+						</div>
+
+					</div>
+				}
+			}
+			else
+			{
+				<h1 class="text-center">You don't have any offer.</h1>
+			}
+		}
+	</div>
+</div>
+
+<script>
+	$(document).ready(function () {
+		$('.contact-button').click(function () {
+			var userEmail = $(this).data('email');
+			$('#userEmail').text(userEmail);
+		});
+	});
+</script>

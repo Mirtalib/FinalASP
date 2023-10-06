@@ -1,0 +1,64 @@
+﻿@model Projecttask.Models.ViewModels.SuccessPageViewModel
+
+<html>
+<head>
+    <style>
+        body {
+            color: #414141;
+        }
+
+        .container {
+            font-family: 'Helvetica Neue', Helvetica;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .text-container {
+            width: 90%;
+            max-width: 800px;
+            font-weight: 300;
+            margin: 0 auto;
+            padding: 15px;
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            font-weight: 100;
+        }
+
+        a {
+            text-decoration: none;
+            color: none;
+        }
+
+        .button {
+            padding: 15px;
+            font-family: 'Helvetica Neue', Helvetica;
+            text-size: 18px;
+            color: white;
+            background-color: #E6A1C3;
+            border: 0;
+            border-radius: 5px;
+            margin: 10px;
+            display: block;
+            max-width: 200px;
+            margin: auto;
+            text-decoration: none;
+        }
+
+        p {
+            line-height: 1.5;
+        }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+</head>
+<body>
+    <div class="container" id="web">
+        <div class="text-container">
+            <h1><i class="fa fa-check-circle" aria-hidden="true" style="color: #04F91D;"></i> @Model.Subject</h1>
+            <p>@Model.Text</p>
+            <button type="button" asp-controller="Account" asp-action="Login" class="btn btn-outline-success">Success</button>
+        </div>
+    </div>
+</body>
+</html>
